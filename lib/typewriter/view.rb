@@ -1,4 +1,6 @@
-
+# An easy-to-grok box-model.  It just lays views out side-by-side, from
+# left-to-right until the frame width is reached, and then drops down to the
+# next row.
 class TypewriterView < UIView
 
   attr_accessor :vertical_spacing, :horizontal_spacing

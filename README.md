@@ -48,7 +48,8 @@ view.right_margin = 20
 Todo
 ====
 
-* Scrolling
 * Pagination
+* Centering of views within the grid
+* Scrolling
 
 [Iconned]: https://github.com/colinta/iconned
