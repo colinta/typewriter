@@ -55,6 +55,3 @@ class TypewriterView < UIView
   end
 
 end
-
-module TypewriterDelegate
-end
