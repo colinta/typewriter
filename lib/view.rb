@@ -1,5 +1,5 @@
 
-class AppLauncherView < UIView
+class BoxFloatView < UIView
 
   def apps
     @apps ||= []
@@ -20,5 +20,5 @@ class AppLauncherView < UIView
 
 end
 
-module AppLauncherDelegate
+module BoxFloatDelegate
 end
