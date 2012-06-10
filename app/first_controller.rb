@@ -22,14 +22,6 @@ class FirstController < UIViewController
     gray_view  = UIView.alloc.initWithFrame([[0, 0],  [80, 240]])
     gray_view.backgroundColor = UIColor.grayColor
 
-    white_view  = UIView.alloc.initWithFrame([[0, 0],  [80, 120]])
-    white_view.backgroundColor = UIColor.whiteColor
-
-    black_view  = UIView.alloc.initWithFrame([[0, 0],  [80, 180]])
-    black_view.backgroundColor = UIColor.blackColor
-
-    bw_view = TypewriterView.alloc.initWithFrame([[]])
-
     [blue_view, red_view, green_cyan_combo, gray_view].each { |view|
       @typewriter.addSubview(view)
     }
