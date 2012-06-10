@@ -1,36 +1,46 @@
 
 class TypewriterView < UIView
 
+  attr_accessor :vertical_spacing, :horizontal_spacing
+  attr_accessor :top_margin, :bottom_margin
+  attr_accessor :left_margin, :right_margin
+
   def initWithFrame(frame)
     super
-    frame = self.frame  # frame could be [[], []] or a CGRect; normalize it.
 
-    layoutSubviews
+    self.spacing = 0
+    self.margin = 0
 
     self
   end
 
-  def frame=(new_frame)
-    super
-    layoutSubviews
+  def spacing=(spacing)
+    @horizontal_spacing = @vertical_spacing = spacing
+  end
+
+  def margin=(margin)
+    @top_margin = @bottom_margin = @left_margin = @right_margin = margin
   end
 
   def clear
-    @x = 0
+    @x = @left_margin
     @y = @max_height
+    # only add the horizontal_spacing after at least one row has been written
+    if @y > @top_margin
+      @y += @horizontal_spacing
+    end
   end
 
   ##|
   ##|  START AT 0, 0, AND START FLOATING
   ##|
   def layoutSubviews
-    @x = @y = 0  # the coordinates for the next frame
-    @max_height = 0  # the max_height of *all* the rows so far (not just the current row)
+    # the max_height of *all* the rows so far (not just the current row)
+    @max_height = @top_margin
+    self.clear
 
-    frame = self.frame
-    # the width, which is fixed.  when a row would be longer than this, it is
-    # wrapped to the next row.
-    @fixed_width = frame.size.width
+    # when a row would be longer than this, it is wrapped to the next row.
+    @max_x = self.frame.size.width - @right_margin
 
     self.subviews.each do |view|
       add_next(view)
@@ -38,17 +48,21 @@ class TypewriterView < UIView
   end
 
   def add_next(view)
-    # ignore the x, y of the added view, we only respect the size
     view_frame = view.frame
 
-    # new row?
-    self.clear if @x + view_frame.size.width > @fixed_width
+    # move to the next new row?
+    next_x = @x + view_frame.size.width
+    if next_x > @max_x
+      self.clear
+      next_x = @x + view_frame.size.width
+    end
 
     # new max_height?
-    @max_height = @y + view_frame.size.height if @y + view_frame.size.height > @max_height
+    next_y = @y + view_frame.size.height
+    @max_height = next_y if next_y > @max_height
 
     view_frame.origin.x = @x
-    @x += view_frame.size.width
+    @x = next_x + horizontal_spacing
     view_frame.origin.y = @y
 
     view.frame = view_frame
