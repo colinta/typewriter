@@ -16,7 +16,7 @@ like a typewriter, dropping to a new line when the width of the next view exceed
 the typewriter's `frame.size.width`.
 
 To use this as an app launcher, just use an appropriate view for the subviews,
-and set some reasonable margins and spacing!
+and set some reasonable margins and spacing!  Same goes for an image gallery.
 
 Spacing
 ====
@@ -45,11 +45,24 @@ view.left_margin = 20
 view.right_margin = 20
 ```
 
+Centering
+====
+
+With centering enabled (and it is, by default), the view will be offset so that
+it is centered.
+
+Grid-like-behavior
+====
+
+Typewriter is not a grid-layout, though it can easily be tricked into acting
+like one.  Using the `min_width` and `min_height` attributes can give you a grid
+layout, if you calculate those ahead of time based on your views, or if you know
+what they are ahead of time.
+
 Todo
 ====
 
 * Pagination
-* Centering of views within the grid
 * Scrolling
 
 [Iconned]: https://github.com/colinta/iconned

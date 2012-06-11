@@ -6,11 +6,17 @@ class FirstController < UIViewController
     @typewriter.backgroundColor = UIColor.darkGrayColor
     @typewriter.margin = 8
     @typewriter.spacing = 4
+    @typewriter.min_width = 40
+    @typewriter.min_height = 40
+
     self.view.addSubview(@typewriter)
 
     96.times do
+      width = (rand() * 30).to_i + 10  # between 10 and 40
       height = (rand() * 50).to_i + 10  # between 10 and 60
-      the_view = UIView.alloc.initWithFrame([[0, 0],  [40, 40]])
+
+      the_view = UIView.alloc.initWithFrame([[0, 0],  [width, height]])
+
       red =   rand
       green = rand
       blue =  rand

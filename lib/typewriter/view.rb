@@ -7,21 +7,71 @@ class TypewriterView < UIView
   attr_accessor :top_margin, :bottom_margin
   attr_accessor :left_margin, :right_margin
 
+  attr_accessor :centered
+  attr_accessor :min_width, :min_height
+
   def initWithFrame(frame)
     super
 
     self.spacing = 0
     self.margin = 0
+    self.centered = true
+    self.min_width = nil
+    self.min_height = nil
+
+    @row = []
 
     self
   end
 
+  # Accepts an integer, or an array of integers.  Follows CSS-like assignment:
+  #
+  # 1 argument => horizontal==vertical
+  # 2 arguments => horizontal, vertical
   def spacing=(spacing)
-    @horizontal_spacing = @vertical_spacing = spacing
+    if Array === spacing
+      case spacing.length
+      when 1
+        self.spacing = spacing[0]
+      when 2
+        @horizontal_spacing = spacing[0]
+        @vertical_spacing = spacing[1]
+      end
+    else
+      @horizontal_spacing = @vertical_spacing = spacing
+    end
   end
 
+  # Accepts an integer, or an array of integers.  Follows CSS-like assignment:
+  #
+  # 1 argument => top==bottom==left==right
+  # 2 arguments => top==bottom, left==right
+  # 3 arguments => top, bottom, left==right
+  # 4 arguments => top, bottom, left, right
   def margin=(margin)
-    @top_margin = @bottom_margin = @left_margin = @right_margin = margin
+    if Array === margin
+      case margin.length
+      when 1
+        self.margin = margin[0]
+      when 2
+        @top_margin = margin[0]
+        @bottom_margin = margin[0]
+        @left_margin = margin[1]
+        @right_margin = margin[1]
+      when 3
+        @top_margin = margin[0]
+        @bottom_margin = margin[2]
+        @left_margin = margin[1]
+        @right_margin = margin[1]
+      when 4
+        @top_margin = margin[0]
+        @bottom_margin = margin[1]
+        @left_margin = margin[2]
+        @right_margin = margin[3]
+      end
+    else
+      @top_margin = @bottom_margin = @left_margin = @right_margin = margin
+    end
   end
 
   def clear
@@ -29,8 +79,30 @@ class TypewriterView < UIView
     @y = @max_height
     # only add the horizontal_spacing after at least one row has been written
     if @y > @top_margin
-      @y += @horizontal_spacing
+      @y += @vertical_spacing
     end
+
+    if not @row.empty? and self.centered
+      row_width = min_width ? min_width : 0
+      row_height = min_height ? min_height : 0
+      @row.each do |view|
+        row_height = view.frame.size.height if view.frame.size.height > row_height
+        row_width = view.frame.size.width if view.frame.size.width > row_width
+      end
+      @row.each do |view|
+        frame = view.frame
+
+        x = (row_width - frame.size.width) / 2
+        y = (row_height - frame.size.height) / 2
+
+        if x > 0 or y > 0
+          frame.origin.x += x.round
+          frame.origin.y += y.round
+          view.frame = frame
+        end
+      end
+    end
+    @row = []
   end
 
   ##|
@@ -53,21 +125,31 @@ class TypewriterView < UIView
     view_frame = view.frame
 
     # move to the next new row?
-    next_x = @x + view_frame.size.width
+    width = view_frame.size.width
+    if self.min_width and width < self.min_width
+      width = self.min_width
+    end
+
+    next_x = @x + width
     if next_x > @max_x
       self.clear
-      next_x = @x + view_frame.size.width
+      next_x = @x + width
     end
 
     # new max_height?
-    next_y = @y + view_frame.size.height
+    height = view_frame.size.height
+    if self.min_height and height < self.min_height
+      height = self.min_height
+    end
+    next_y = @y + height
     @max_height = next_y if next_y > @max_height
 
     view_frame.origin.x = @x
-    @x = next_x + horizontal_spacing
+    @x = next_x + @horizontal_spacing
     view_frame.origin.y = @y
 
     view.frame = view_frame
+    @row.push view
   end
 
 end
