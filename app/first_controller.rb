@@ -4,10 +4,7 @@ class FirstController < UIViewController
   def viewDidLoad
     @typewriter = TypewriterView.alloc.initWithFrame([[0, 0], [320, 480]])
     @typewriter.backgroundColor = UIColor.darkGrayColor
-    @typewriter.margin = 8
-    @typewriter.spacing = 4
-    @typewriter.min_width = 40
-    @typewriter.min_height = 40
+    style_portrait
 
     self.view.addSubview(@typewriter)
 
@@ -25,6 +22,20 @@ class FirstController < UIViewController
     end
   end
 
+  def style_portrait
+    @typewriter.margin = 8
+    @typewriter.spacing = 4
+    @typewriter.min_width = 40
+    @typewriter.min_height = 40
+  end
+
+  def style_landscape
+    @typewriter.margin = 13
+    @typewriter.spacing = 6
+    @typewriter.min_width = 40
+    @typewriter.min_height = 40
+  end
+
   def shouldAutorotateToInterfaceOrientation(orientation)
     true
   end
@@ -34,6 +45,13 @@ class FirstController < UIViewController
     w, h = bframe.size.width, bframe.size.height
     bframe.size = h, w
     @typewriter.frame = bframe
+
+    if orientation == UIInterfaceOrientationPortrait or orientation == UIInterfaceOrientationPortraitUpsideDown
+      style_portrait
+    else
+      style_landscape
+    end
+
     @typewriter.setNeedsLayout
   end
 
