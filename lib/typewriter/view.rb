@@ -119,6 +119,7 @@ class TypewriterView < UIView
     self.subviews.each do |view|
       add_next(view)
     end
+    self.clear
   end
 
   def add_next(view)
