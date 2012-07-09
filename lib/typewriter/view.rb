@@ -82,22 +82,28 @@ class TypewriterView < UIView
       @y += @vertical_spacing
     end
 
-    if not @row.empty? and self.centered
-      row_width = min_width ? min_width : 0
-      row_height = min_height ? min_height : 0
+    if self.centered
+      row_width = @left_margin
+      row_height = min_height || 0
       @row.each do |view|
+        if row_width > 0
+          row_width += @horizontal_spacing
+        end
         row_height = view.frame.size.height if view.frame.size.height > row_height
-        row_width = view.frame.size.width if view.frame.size.width > row_width
+        row_width += view.frame.size.width
       end
+      row_width += @right_margin
+      row_width = min_width if min_width and row_width < min_width
+      x = ((self.frame.size.width - row_width) / 2).round
+
       @row.each do |view|
         frame = view.frame
 
-        x = (row_width - frame.size.width) / 2
-        y = (row_height - frame.size.height) / 2
+        y = ((row_height - frame.size.height) / 2).round
 
         if x > 0 or y > 0
-          frame.origin.x += x.round
-          frame.origin.y += y.round
+          frame.origin.x += x
+          frame.origin.y += y
           view.frame = frame
         end
       end
