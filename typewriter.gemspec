@@ -7,11 +7,11 @@ Gem::Specification.new do |gem|
 
   gem.authors       = ["Colin Thomas-Arnold"]
   gem.email         = ["colinta@gmail.com"]
+  gem.summary       = 'Implements layoutSubviews to "type" out subviews.'
   gem.description = <<-DESC
 Typewriter is a simple way to add views.  As long as you set the width and
 height, you can "type" them onto a `Typewriter::View`.
 DESC
-  gem.summary       = 'Implements layoutSubviews to "type" out subviews.'
   gem.homepage      = 'https://github.com/colinta/typewriter'
 
   gem.require_paths = ['lib']
