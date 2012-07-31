@@ -1,5 +1,5 @@
 unless defined?(Motion::Project::Config)
-  raise "This file (typewriter) must be required within a RubyMotion project Rakefile."
+  raise "The typewriter gem must be required within a RubyMotion project Rakefile."
 end
 
 
