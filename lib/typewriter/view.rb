@@ -2,6 +2,7 @@
 # left-to-right until the frame width is reached, and then drops down to the
 # next row.
 class TypewriterView < UIView
+  attr_accessor :scroll_view
 
   attr_accessor :vertical_spacing, :horizontal_spacing
   attr_accessor :top_margin, :bottom_margin
@@ -109,6 +110,10 @@ class TypewriterView < UIView
   ##|  START AT 0, 0, AND START FLOATING
   ##|
   def layoutSubviews
+    layoutIfNeeded
+  end
+  def layoutIfNeeded
+    super
     # the max_height of *all* the rows so far (not just the current row)
     @max_height = top_margin
     clear
@@ -117,10 +122,15 @@ class TypewriterView < UIView
     @max_x = self.frame.size.width - right_margin
 
     self.subviews.each do |view|
-      view.layoutSubviews
       add_next(view)
     end
     clear
+
+    self.frame = [self.frame.origin, [self.frame.size.width, @y]]
+    if scroll_view
+      scroll_view.scrollEnabled = (@y > scroll_view.frame.size.height)
+      scroll_view.contentSize = self.frame.size
+    end
   end
 
   private
