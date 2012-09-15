@@ -34,7 +34,7 @@ class TypewriterView < UIView
   # 1 argument => horizontal==vertical
   # 2 arguments => horizontal, vertical
   def spacing=(spacing)
-    if Array === spacing
+    if spacing.is_a? Array
       case spacing.length
       when 1
         self.spacing = spacing[0]
