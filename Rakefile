@@ -2,7 +2,7 @@ $:.unshift("/Library/RubyMotion/lib")
 require 'motion/project'
 
 
-dirs = ['lib', 'app']
+dirs = ['lib/typewriter', 'app']
 
 
 Motion::Project::App.setup do |app|
