@@ -3,6 +3,7 @@
 # next row.
 class TypewriterView < UIView
   attr_accessor :scroll_view
+  attr_accessor :background_view
 
   attr_accessor :vertical_spacing, :horizontal_spacing
   attr_accessor :top_margin, :bottom_margin
@@ -46,12 +47,13 @@ class TypewriterView < UIView
       @horizontal_spacing = @vertical_spacing = spacing
     end
   end
+
   # Accepts an integer, or an array of integers.  Follows CSS-like assignment:
   #
   # 1 argument => top==bottom==left==right
   # 2 arguments => top==bottom, left==right
-  # 3 arguments => top, bottom, left==right
-  # 4 arguments => top, bottom, left, right
+  # 3 arguments => top, left==right, bottom
+  # 4 arguments => top, right, bottom, left
   def margin=(margins)
     return margins = [margins] unless margins.is_a? Array
 
@@ -65,14 +67,14 @@ class TypewriterView < UIView
       @right_margin = margins[1]
     when 3
       @top_margin = margins[0]
-      @bottom_margin = margins[2]
-      @left_margin = margins[1]
+      @bottom_margin = margins[0]
       @right_margin = margins[1]
+      @left_margin = margins[2]
     when 4
       @top_margin = margins[0]
-      @bottom_margin = margins[1]
-      @left_margin = margins[2]
-      @right_margin = margins[3]
+      @right_margin = margins[1]
+      @bottom_margin = margins[2]
+      @left_margin = margins[3]
     else
       raise "Too many arguments (#{margins.length}) sent to MarginView#margin"
     end
@@ -111,9 +113,10 @@ class TypewriterView < UIView
   ##|
   def layoutSubviews
     layoutIfNeeded
+    super
   end
   def layoutIfNeeded
-    super
+    # super
     # the max_height of *all* the rows so far (not just the current row)
     @max_height = top_margin
     clear
@@ -131,6 +134,16 @@ class TypewriterView < UIView
       scroll_view.scrollEnabled = (@y > scroll_view.frame.size.height)
       scroll_view.contentSize = self.frame.size
     end
+    if background_view
+      background_view.frame = self.bounds
+    end
+  end
+
+  def background_view=(view)
+    @background_view.removeFromSuperview if @background_view && @background_view.superview == self
+    view.frame = self.bounds
+    self.insertSubview(view, atIndex:0)
+    @background_view = view
   end
 
   private

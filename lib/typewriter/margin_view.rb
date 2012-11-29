@@ -57,9 +57,9 @@ class MarginView < UIView
     @right_margin
   end
   def didAddSubview(view)
-    self.layoutIfNeeded
+    self.layoutSubviews
   end
-  def layoutIfNeeded
+  def layoutSubviews
     super
     if self.subviews[0]
       myframe = self.frame
@@ -79,6 +79,24 @@ class MarginView < UIView
         superview.layoutIfNeeded if superview
       end
     end
+  end
+
+  def hitTest(point, withEvent:event)
+    tests = SugarCube::Adjust::build_tree(self, :subviews)
+    # tests.sort! { |a,b|
+    #   za = a.respond_to?(:z_index) ? a.z_index : -2
+    #   zb = b.respond_to?(:z_index) ? b.z_index : -1
+    #   za <=> zb
+    # }
+
+    while testing = tests.pop
+      test_point = testing.convertPoint(point, fromView:self)
+      if testing.userInteractionEnabled? && testing.pointInside(test_point, withEvent:event) && testing.class != UIView
+        return testing
+      end
+    end
+
+    nil
   end
 
 end
