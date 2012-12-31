@@ -131,7 +131,7 @@ class TypewriterView < UIView
     end
     clear
 
-    self.frame = [self.frame.origin, [self.frame.size.width, @y]]
+    self.frame = [self.frame.origin, [self.frame.size.width, @y + @bottom_margin]]
     if scroll_view
       scroll_view.scrollEnabled = (@y > scroll_view.frame.size.height)
       scroll_view.contentSize = self.frame.size
