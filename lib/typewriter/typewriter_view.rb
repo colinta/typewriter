@@ -125,7 +125,9 @@ class TypewriterView < UIView
     @max_x = self.frame.size.width - right_margin
 
     self.subviews.each do |view|
-      add_next(view)
+      unless view == @background_view
+        add_next(view)
+      end
     end
     clear
 
